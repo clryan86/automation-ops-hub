@@ -1,0 +1,34 @@
+{
+  "name": "Order Exception Triage",
+  "description": "Calculates order exposure and prepares an operations note for high-value order review.",
+  "steps": [
+    {
+      "name": "Calculate exposure",
+      "action": "calculate",
+      "params": {
+        "path": "ops.exposure",
+        "expression": "quantity * unit_price",
+        "variables": {
+          "quantity": "order.quantity",
+          "unit_price": "order.unit_price"
+        }
+      }
+    },
+    {
+      "name": "Build triage message",
+      "action": "template",
+      "params": {
+        "path": "ops.note",
+        "template": "Order {{order.order_id}} has calculated exposure {{ops.exposure}} and status {{order.status}}."
+      }
+    },
+    {
+      "name": "Require order id",
+      "action": "assert",
+      "params": {
+        "path": "order.order_id",
+        "operator": "exists"
+      }
+    }
+  ]
+}
