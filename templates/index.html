@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero"><p class="eyebrow">Automation engineering portfolio</p><h1>Orchestrate business workflows with traceable execution.</h1><p class="lead">Define workflows, trigger them by API or webhook, schedule recurring runs, preserve step-level audit history, and track reliability from one operations dashboard.</p></section>
+<section class="metrics">
+  <div class="metric"><span>{{ metrics.workflows }}</span><small>Workflows</small></div>
+  <div class="metric"><span>{{ metrics.runs }}</span><small>Runs</small></div>
+  <div class="metric"><span>{{ metrics.success_rate }}%</span><small>Success rate</small></div>
+  <div class="metric"><span>{{ metrics.schedules }}</span><small>Schedules</small></div>
+</section>
+<section class="grid two">
+  <div class="panel"><div class="section-title"><div><p class="eyebrow">Configured automation</p><h2>Workflows</h2></div></div>{% for workflow in workflows %}<div class="row"><div><strong>{{ workflow.name }}</strong><p>{{ workflow.description }}</p></div><span class="badge good">enabled</span></div>{% else %}<p class="muted">Run <code>python scripts/seed_demo.py</code> to load demo workflows.</p>{% endfor %}</div>
+  <div class="panel"><div class="section-title"><div><p class="eyebrow">Recurring execution</p><h2>Schedules</h2></div></div>{% for schedule in schedules %}<div class="row"><div><strong>{{ schedule.name }}</strong><p>Every {{ schedule.interval_minutes }} min</p></div><span class="badge">{{ schedule.next_run_at.strftime('%Y-%m-%d %H:%M') }}</span></div>{% else %}<p class="muted">No schedules configured.</p>{% endfor %}</div>
+</section>
+<section class="panel wide"><div class="section-title"><div><p class="eyebrow">Operations history</p><h2>Recent workflow runs</h2></div></div><div class="table-wrap"><table><thead><tr><th>Run</th><th>Workflow</th><th>Trigger</th><th>Status</th><th>Duration</th></tr></thead><tbody>{% for run in runs %}<tr><td><a href="/runs/{{ run.id }}">#{{ run.id }}</a></td><td>{{ run.workflow.name }}</td><td>{{ run.trigger_type }}</td><td><span class="badge {% if run.status == 'SUCCEEDED' %}good{% elif run.status == 'FAILED' %}bad{% endif %}">{{ run.status }}</span></td><td>{% if run.duration_ms %}{{ '%.1f'|format(run.duration_ms) }} ms{% endif %}</td></tr>{% else %}<tr><td colspan="5" class="muted">No runs yet.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}
