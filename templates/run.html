@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero compact"><p class="eyebrow">Execution trace</p><h1>Run #{{ run.id }}</h1><p class="lead">{{ run.workflow.name }} • {{ run.trigger_type }} • <span class="badge {% if run.status == 'SUCCEEDED' %}good{% else %}bad{% endif %}">{{ run.status }}</span></p></section>
+<section class="grid two"><div class="panel"><h2>Input</h2><pre>{{ run.input_json }}</pre></div><div class="panel"><h2>Output</h2><pre>{{ output | tojson(indent=2) }}</pre></div></section>
+<section class="panel wide"><h2>Step trace</h2>{% for step in run.steps %}<div class="step"><div><strong>{{ step.position + 1 }}. {{ step.step_name }}</strong><p>{{ step.action }} • {{ step.attempts }} attempt{% if step.attempts != 1 %}s{% endif %}</p></div><span class="badge {% if step.status == 'SUCCEEDED' %}good{% elif step.status == 'FAILED' %}bad{% endif %}">{{ step.status }}</span></div>{% endfor %}</section>
+{% endblock %}
