@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:////app/data/automation_ops.db
+      SCHEDULER_ENABLED: "true"
+      SCHEDULER_POLL_SECONDS: "10"
+      ALLOW_HTTP_ACTIONS: "false"
+    volumes:
+      - automation_data:/app/data
+
+volumes:
+  automation_data:
