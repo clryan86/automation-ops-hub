@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ app_name }}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<header class="topbar"><div class="shell nav"><a class="brand" href="/">Automation Ops Hub</a><div><a href="/docs">API Docs</a></div></div></header>
+<main class="shell">{% block content %}{% endblock %}</main>
+<footer class="shell footer">FastAPI • SQLAlchemy • Workflow Engine • Webhooks • Scheduling</footer>
+</body>
+</html>
