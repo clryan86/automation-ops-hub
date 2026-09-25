@@ -1,0 +1,59 @@
+{
+  "name": "Lead Qualification Pipeline",
+  "description": "Normalizes an inbound lead, calculates an opportunity score, validates required fields, and creates a routing message.",
+  "steps": [
+    {
+      "name": "Calculate lead score",
+      "action": "calculate",
+      "params": {
+        "path": "automation.lead_score",
+        "expression": "company_size * 0.4 + budget * 0.006",
+        "variables": {
+          "company_size": "lead.company_size",
+          "budget": "lead.budget"
+        }
+      }
+    },
+    {
+      "name": "Validate email",
+      "action": "regex_extract",
+      "params": {
+        "source": "lead.email",
+        "pattern": "^([^@]+)@([^@]+)$",
+        "group": 2,
+        "path": "automation.email_domain"
+      }
+    },
+    {
+      "name": "Create sales note",
+      "action": "template",
+      "params": {
+        "path": "automation.sales_note",
+        "template": "Lead {{lead.name}} from {{automation.email_domain}} scored {{automation.lead_score}}."
+      }
+    },
+    {
+      "name": "Mark high priority",
+      "action": "set",
+      "when": {
+        "path": "lead.enterprise",
+        "operator": "equals",
+        "value": true
+      },
+      "params": {
+        "path": "automation.priority",
+        "value": "high"
+      }
+    },
+    {
+      "name": "Require lead identity",
+      "action": "assert",
+      "params": {
+        "path": "lead.name",
+        "operator": "truthy",
+        "message": "Lead name is required"
+      },
+      "max_attempts": 2
+    }
+  ]
+}
